@@ -1,0 +1,64 @@
+\documentclass{ctexrep}
+\usepackage{subfiles}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+ 
+\urlstyle{same}
+
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  total={170mm,257mm},
+  left=20mm,
+  top=20mm
+}
+\usepackage{graphicx}
+
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily, numbers=left}
+\renewcommand\lstlistingname{代码}
+\renewcommand\lstlistlistingname{代码索引}
+\usepackage{afterpage}
+
+\newcommand \blankpage{
+    \null
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
+    \newpage
+}
+
+\title{\includegraphics[]{logo.png}\\ 计算机组成与结构}
+
+\author{班级：软件42 \\ 姓名：陈 铮 \\ 学号：2141601026}
+\date{2017 年 1 月 1 日}
+
+\begin{document}
+
+\maketitle
+
+\afterpage{\blankpage}
+
+\tableofcontents
+
+%\afterpage{\blankpage}
+
+\subfile{chapters/overview.tex}
+
+\subfile{chapters/1.tex}
+
+\subfile{chapters/2.tex}
+
+\subfile{chapters/3.tex}
+
+\subfile{chapters/4.tex}
+
+\subfile{chapters/5.tex}
+
+\subfile{chapters/6.tex}
+
+\end{document}
