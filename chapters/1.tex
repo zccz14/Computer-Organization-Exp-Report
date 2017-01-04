@@ -16,7 +16,7 @@
 
 \subsection{连续节拍发生电路}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{images/prin1_1.png}
 \caption{连续节拍发生电路}
@@ -74,7 +74,7 @@
     
     这个时候实际上 RST1 对电路是没有其他影响的，触发器的 PRN, CLRN 都处于无效态。
     
-    对于任意一个 D 触发器，将在下一个 CLK1 上升沿使得 Q := D。由于四个 D 触发器的 Q, D 首尾相连，实际上它们在每个 CLK1 上升沿时，将前一个 D 触发器的输出电位“搬运”到下一个 D 触发器输出电位。周而复始，形成连续节拍发生器。
+    对于任意一个 D 触发器，将在下一个 CLK1 上升沿使得 Q := D。由于四个 D 触发器的 Q, D 首尾相连，实际上它们在每个 CLK1 上升沿时，将前一个 D 触发器的输出电位“传导”到下一个 D 触发器输出电位。周而复始，形成连续节拍发生器。
     
     其周期为 CLK1 周期的4倍。
     
@@ -82,7 +82,7 @@
 
 \subsection{单步节拍发生电路}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{images/prin1_2.png}
 \caption{单步节拍发生电路}
@@ -144,7 +144,7 @@
     
     在 RST1 = 1 后的第一个 CLK1 上升沿，第一个 D 触发器的 T1 = Q := D = 1，T1 = 1 时 4 路或非门将输出 0，因此第一个 D 触发器的 D端将马上被置为 0，这样就能保证只产生一个信号。
     
-    在第二、三、四个 CLK1 上升沿，同连续时序发生器，电位在触发器之间被“搬运”，T2, T3, T4 相继输出1，然后复位。
+    在第二、三、四个 CLK1 上升沿，同连续时序发生器，电位在触发器之间被“传导”，T2, T3, T4 相继输出1，然后复位。
     
     在第五个 CLK1 上升沿，T5 := 1，2 路或门的输出保持为1，屏蔽时钟信号对节拍发生器的影响。
         
@@ -153,7 +153,7 @@
 \subsection{单步/连续节拍发生电路}
 
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{images/prin1_3.png}
 \caption{单步/连续节拍发生电路}
@@ -220,48 +220,213 @@
         \item T5 断路，连带第五个 D 触发器的输出断路，因此该触发器无效，可消去。
     \end{itemize}
     
-    此时类似单步时序发生器的原理，在 RST1 = 0 时由 3 路或非门给出第一个高电平信号；在 RST1 = 1 时“搬运”该信号，当 T4 = 1 时，可知 T1 = T2 = T3 = 0, 3 路或非门又将产生一个新的高电平信号。周而复始，构成连续时序发生器。
+    此时类似单步时序发生器的原理，在 RST1 = 0 时由 3 路或非门给出第一个高电平信号；在 RST1 = 1 时“传导”该信号，当 T4 = 1 时，可知 T1 = T2 = T3 = 0, 3 路或非门又将产生一个新的高电平信号。周而复始，构成连续时序发生器。
         
 \end{enumerate}
 
-\section{实验任务}
+\section{实验任务与实验步骤}
 
 \subsection{连续节拍发生电路设计}
 
+\begin{enumerate}
+    \item 按照原理图 \ref{fig:prin1_1} 连接电路图，然后编译。
+    \item 将输入输出器件绑定到对应的引脚上，然后重新编译。
+    
+    \begin{itemize}
+        \item CLK1 PIN\_28 (时钟信号)
+        \item RST1 PIN\_173 (Key 8)
+        \item T1 PIN\_137 (发光管 1)
+        \item T2 PIN\_138 (发光管 2)
+        \item T3 PIN\_139 (发光管 3)
+        \item T4 PIN\_140 (发光管 4)
+    \end{itemize}
+    
+    \item 下载到实验设备上。
+    \item 调整为工作模式 1。
+    \item 观察实验现象。
+    
+    \begin{itemize}
+        \item Key 8
+        
+        (重)启动连续节拍发生。
+        
+    \end{itemize}
+    \item 绘制仿真波形图。
+\end{enumerate}
+
 \subsection{单步节拍发生电路设计}
 
-\subsubsection{没有 T5 输入下的仿真波形图}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=\textwidth]{images/wave1_2_1.png}
-\caption{没有 T5 输入时的仿真波形图}
-\label{fig:wave1_2_1}
-\end{figure}
-
-若 2 路或门没有 T5 输入而是 GND 输入，或门失效，可消去。
-
-当高电位“搬运”至 T5 时，T1 = T2 = T3 = T4 = 0, 4 路或非门将输出 1，产生新的高电平。
-
-这样就化为连续节拍发生器了。
-
-由此说明，T5 输入的作用在于屏蔽时钟信号，阻止下一节拍的发生。
-
-由此引发思考：如果直接在单步节拍发生电路的基础上，将 T5 输入改为 AND(NOT(S0), T5)，就产生了单步/连续节拍发生器。
-
-这与原理图 \ref{fig:prin1_3} 的区别在于连续时序发生器的周期不同，在高电位搬运至 T5 时没有输出 T5，相当于产生了一个空节拍。
-
-重新思考原理图 \ref{fig:prin1_3} 还是能发现一些冗余、可以优化的地方，例如 3 路或非门可以通过将“先选择，后或非”的方式合并到 4 路或非门中。
+\begin{enumerate}
+    \item 按照原理图 \ref{fig:prin1_2} 连接电路图，然后编译。
+    \item 将输入输出器件绑定到对应的引脚上，然后重新编译。
+    
+    \begin{itemize}
+        \item CLK1 PIN\_28 (时钟信号)
+        \item RST1 PIN\_173 (Key 8)
+        \item T1 PIN\_137 (发光管 1)
+        \item T2 PIN\_138 (发光管 2)
+        \item T3 PIN\_139 (发光管 3)
+        \item T4 PIN\_140 (发光管 4)
+    \end{itemize}
+    
+    \item 下载到实验设备上。
+    \item 调整为工作模式 1。
+    \item 观察实验现象。
+    
+    \begin{itemize}
+        \item Key 8
+        
+        启动下一个单步节拍发生。
+        
+    \end{itemize}
+    \item 绘制仿真波形图。
+\end{enumerate}
 
 \subsection{单步/连续节拍发生电路设计}
+
+\begin{enumerate}
+    \item 按照原理图 \ref{fig:prin1_3} 连接电路图，然后编译。
+    \item 将输入输出器件绑定到对应的引脚上，然后重新编译。
+    
+    \begin{itemize}
+        \item CLK1 PIN\_28 (时钟信号)
+        \item RST1 PIN\_173 (Key 8)
+        \item S0 PIN\_169 (Key 7)
+        \item T1 PIN\_137 (发光管 1)
+        \item T2 PIN\_138 (发光管 2)
+        \item T3 PIN\_139 (发光管 3)
+        \item T4 PIN\_140 (发光管 4)
+    \end{itemize}
+    
+    \item 下载到实验设备上。
+    \item 调整为工作模式 1。
+    \item 观察实验现象。
+    
+    \begin{itemize}
+        \item Key 7
+        
+        切换连续/单步模式。
+        
+        \item Key 8
+        
+        产生新的节拍。
+        
+    \end{itemize}
+    \item 绘制仿真波形图。
+    
+\end{enumerate}
+
+\section{实验结果分析}
+
+\subsection{实验电路图}
+
+根据原理图 \ref{fig:prin1_1} 绘制实验电路图 \ref{fig:bdf1_1}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/bdf1_1.png}
+\caption{连续节拍发生电路图}
+\label{fig:bdf1_1}
+\end{figure}
+
+根据原理图 \ref{fig:prin1_2} 绘制实验电路图 \ref{fig:bdf1_2}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/bdf1_2.png}
+\caption{单步节拍发生电路图}
+\label{fig:bdf1_2}
+\end{figure}
+
+根据原理图 \ref{fig:prin1_3} 绘制实验电路图 \ref{fig:bdf1_3}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/bdf1_3.png}
+\caption{连续/单步节拍发生电路图}
+\label{fig:bdf1_3}
+\end{figure}
+
+\subsection{仿真波形图}
+
+利用 Quartus II 产生仿真波形图 \ref{fig:wave1_1}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/wave1_1.png}
+\caption{连续节拍发生电路 仿真波形图}
+\label{fig:wave1_1}
+\end{figure}
+
+利用 Quartus II 产生仿真波形图 \ref{fig:wave1_2}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/wave1_2.png}
+\caption{单步节拍发生电路 仿真波形图}
+\label{fig:wave1_2}
+\end{figure}
+
+利用 Quartus II 产生仿真波形图 \ref{fig:wave1_3}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/wave1_3.png}
+\caption{连续/单步节拍发生电路 仿真波形图}
+\label{fig:wave1_3}
+\end{figure}
+
+\subsection{附加题}
+
+\begin{enumerate}
+    \item 为何能产生所需节拍？
+    
+    参考本章\textbf{实验原理}节的对应的\textbf{详细说明}小节。
+    
+    \item 对于单步节拍发生电路，特别要对比没有 T5 输入时的仿真波形图，借此说明 T5 的作用。
+    
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/wave1_2_1.png}
+    \caption{没有 T5 输入时的仿真波形图}
+    \label{fig:wave1_2_1}
+    \end{figure}
+    
+    与仿真波形图 \ref{fig:wave1_2} 对比可以发现单步失控了。
+    
+    若 2 路或门没有 T5 输入而是 GND 输入，或门失效，可消去。
+    
+    当高电位“传导”至 T5 时，T1 = T2 = T3 = T4 = 0, 4 路或非门将输出 1，产生新的高电平。
+    
+    这样就化为连续节拍发生器了。
+    
+    由此说明，T5 输入的作用在于屏蔽时钟信号，阻止下一节拍的发生。
+    
+    由此引发思考：如果直接在单步节拍发生电路的基础上，将 T5 输入改为 AND(NOT(S0), T5)，就产生了单步/连续节拍发生器。
+    
+    这与原理图 \ref{fig:prin1_3} 的区别在于连续时序发生器的周期不同，在高电位传导至 T5 时没有输出 T5，相当于产生了一个空节拍。
+    
+    重新思考原理图 \ref{fig:prin1_3} 还是能发现一些冗余、可以优化的地方，例如 3 路或非门可以通过将“先选择，后或非”的方式合并到 4 路或非门中。
+    
+\end{enumerate}
 
 \subsection{思考题}
 
 \begin{enumerate}
     \item 单步运行与连续运行有何区别，它们各自的使用环境怎样？
     
+    \textbf{答}：正如字面意思，对于每次按键，单步运行只产生一个节拍，而连续运行会不断产生节拍。
+    
+    单步运行通常在\textbf{程序调试}中使用；连续运行通常在\textbf{程序运行}中使用。
+    
     \item 如何实现单步/连续运行工作方式的切换？
     
+    \textbf{答}：关键在于 D 触发器的输出将会产生什么影响。
+    
+    如果每个 D 触发器的输出都能使得下一个“传导”暂停，那么就是单步模式；
+    
+    否则如果最后一个 D 触发器的输出使得第一个 D 触发器得到新的输入信号，那么就是连续模式；
+    
+    通过逻辑电路，引入新的输入（S0），实现模式的切换。
+    
 \end{enumerate}
-
-\section{实验步骤}
